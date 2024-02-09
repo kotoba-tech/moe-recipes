@@ -342,7 +342,7 @@ def _add_model_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         "--num-experts", type=int, default=8,
     )
     group.add_argument(
-        "--router_aux_loss_coef", type=float, default=0.02,
+        "--router-aux-loss-coef", type=float, default=0.02,
     )
 
     return parser

@@ -5,8 +5,8 @@ source .env/bin/activate
 
 # distributed settings
 JOB_ID=$(date +%s%N)
-export MASTER_ADDR=$(/usr/sbin/ip a show dev bond0 | grep 'inet ' | awk '{ print $2 }' | cut -d "/" -f 1)
-export MASTER_PORT=$((10000 + ($JOB_ID % 50000)))
+export MASTER_ADDR=10.130.184.10
+export MASTER_PORT=12803
 
 echo "MASTER_ADDR=${MASTER_ADDR}"
 
@@ -47,37 +47,19 @@ WEIGHT_DECAY=0.1
 GRAD_CLIP=1
 
 # checkpoint & tokenizer
-TOKENIZER_MODEL=llm-jp-tokenizer
+TOKENIZER_MODEL=/model/fujii/llm-jp-tokenizer/models/ver2.2/code20K_en40K_ja60K.ver2.2.model
 CHECKPOINT_DIR=/model/fujii/hf_checkpoints/Mixtral-8x1.3B-llm-jp/
-CHECKPOINT_SAVE_DIR="/bb/llm/gaf51275/llama/checkpoints/Mixtral-8x1.3B/lr_${LR}-minlr_${MIN_LR}_warmup_${LR_WARMUP_STEPS}_seq_${SEQ_LENGTH}"
+CHECKPOINT_SAVE_DIR="/model/fujii/checkpoints/Mixtral-8x1.3B/lr_${LR}-minlr_${MIN_LR}_warmup_${LR_WARMUP_STEPS}_seq_${SEQ_LENGTH}"
 
 mkdir -p ${CHECKPOINT_SAVE_DIR}
 
 # data config
+DATASET_DIR="/model/fujii/datasets"
 
 DATA_PATH=""
 
 # ja okazaki lab cc
-DATA_PATH="${DATA_PATH} "
-DATA_PATH="${DATA_PATH} "
-DATA_PATH="${DATA_PATH} "
-DATA_PATH="${DATA_PATH} "
-DATA_PATH="${DATA_PATH} "
-
-# ja wikipedia
-DATA_PATH="${DATA_PATH} "
-
-# en arxiv
-DATA_PATH="${DATA_PATH} "
-
-# en refinedweb
-DATA_PATH="${DATA_PATH} "
-
-# algebraic stack
-DATA_PATH="${DATA_PATH} "
-
-# The Vault
-DATA_PATH="${DATA_PATH} "
+DATA_PATH="${DATA_PATH} ${DATASET_DIR}/CC-MAIN-2013-2016.jsonl_text_document"
 
 
 # job name
@@ -89,6 +71,7 @@ mpirun -np $NUM_GPUS \
   -hostfile $HOSTFILE_NAME \
   -x MASTER_ADDR=$MASTER_ADDR \
   -x MASTER_PORT=$MASTER_PORT \
+  -x NCCL_IB_GID_INDEX=3 -x NCCL_IB_TC=106 \
   -bind-to none -map-by slot \
   -x PATH \
   python examples/finetuning.py \
