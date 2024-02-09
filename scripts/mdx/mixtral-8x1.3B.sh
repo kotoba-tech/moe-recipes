@@ -48,7 +48,6 @@ GRAD_CLIP=1
 
 # checkpoint & tokenizer
 TOKENIZER_MODEL=/model/fujii/llm-jp-tokenizer/models/ver2.2/code20K_en40K_ja60K.ver2.2.model
-CHECKPOINT_DIR=/model/fujii/hf_checkpoints/Mixtral-8x1.3B-llm-jp/
 CHECKPOINT_SAVE_DIR="/model/fujii/checkpoints/Mixtral-8x1.3B/lr_${LR}-minlr_${MIN_LR}_warmup_${LR_WARMUP_STEPS}_seq_${SEQ_LENGTH}"
 
 mkdir -p ${CHECKPOINT_SAVE_DIR}
@@ -110,7 +109,7 @@ mpirun -np $NUM_GPUS \
   --eval-iters 10 \
   --bf16 \
   --mixed-precision \
-  --base-model ${CHECKPOINT_DIR} \
+  --base-model "Mixtral" \
   --save ${CHECKPOINT_SAVE_DIR} \
   --load ${CHECKPOINT_SAVE_DIR} \
   --use-zero \
