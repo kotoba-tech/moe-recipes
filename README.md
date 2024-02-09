@@ -23,6 +23,12 @@ module load openmpi/4.x.x
 pip install mpi4py
 ```
 
+If DeepSpeed version under 0.13.2 is installed, you need to install the below packages:
+
+```bash
+pip install git+https://github.com/microsoft/DeepSpeed.git
+```
+
 ### FlashAttention
 
 To install the FlashAttention, run the following command: (GPU is required)
