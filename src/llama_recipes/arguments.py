@@ -10,6 +10,7 @@ def parse_args() -> argparse.Namespace:
     parser = _add_data_args(parser=parser)
     parser = _add_training_args(parser=parser)
     parser = _add_regularization_args(parser=parser)
+    parser = _add_model_args(parser=parser)
 
     args = parser.parse_args()
 
@@ -271,6 +272,8 @@ def _add_training_args(parser: argparse.ArgumentParser) -> argparse.ArgumentPars
 
     # moe args
     group.add_argument("--output-router-logits", action="store_true")
+    # from scratch
+    group.add_argument("--from-scratch", action="store_true")
 
     return parser
 
@@ -301,6 +304,45 @@ def _add_regularization_args(parser: argparse.ArgumentParser) -> argparse.Argume
     group.add_argument(
         '--adam-eps', type=float, default=1e-06,
         help='Term added to the denominator to improve numerical stability'
+    )
+
+    return parser
+
+
+def _add_model_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    group = parser.add_argument_group(title='model config')
+
+    group.add_argument(
+        "--hidden-size", type=int, default=4096,
+        help="Hidden size of the transformer model."
+    )
+    group.add_argument(
+        "--intermediate-size", type=int, default=14336,
+        help="Intermediate size of the transformer model."
+    )
+    group.add_argument(
+        "--initializer-range", type=float, default=0.02,
+        help="initializing all weight matrices."
+    )
+    group.add_argument(
+        "--num-attention-heads", type=int, default=32,
+        help="Number of attention heads."
+    )
+    group.add_argument(
+        "--num-key-value-heads", type=int, default=8,
+    )
+    group.add_argument(
+        "--num-hidden-layers", type=int, default=32,
+        help="Number of layers in the transformer model."
+    )
+    group.add_argument(
+        "--top-k", type=int, default=2,
+    )
+    group.add_argument(
+        "--num-experts", type=int, default=8,
+    )
+    group.add_argument(
+        "--router_aux_loss_coef", type=float, default=0.02,
     )
 
     return parser

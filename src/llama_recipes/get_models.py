@@ -10,8 +10,7 @@ from transformers import (
 )
 from llama_recipes.utils.distributed import get_rank, is_rank_0
 import torch
-from megatron_lm.megatron.global_vars import get_args
-from transformers.integrations import is_deepspeed_zero3_enabled
+from megatron_lm.megatron.global_vars import get_args, get_tokenizer
 
 
 def get_model(
@@ -84,6 +83,28 @@ def get_model(
         return model  # type: ignore
 
     elif "Mixtral" in model_name:
+        if args.from_scratch:
+            model = MixtralForCausalLM(
+                MixtralConfig(
+                    vocab_size=get_tokenizer().vocab_size,
+                    hidden_size=args.hidden_size,
+                    intermediate_size=args.intermediate_size,
+                    initializer_range=args.initializer_range,
+                    num_hidden_layers=args.num_hidden_layers,
+                    num_attention_heads=args.num_attention_heads,
+                    max_position_embeddings=args.seq_length,
+                    num_key_value_heads=args.num_key_value_heads,
+                    num_experts_per_tok=args.top_k,
+                    num_local_experts=args.num_experts,
+                    router_aux_loss_coef=args.router_aux_loss_coef,
+                    attn_implementation="flash_attention_2",
+                    output_router_logits=args.output_router_logits,
+                    torch_dtype=torch.bfloat16 if args.bf16 else torch.float16,
+                    use_cache=use_cache,
+                )
+            )
+            return model
+
         model = MixtralForCausalLM.from_pretrained(
             model_name,
             # device_map="auto", (これがあるとダメ)
