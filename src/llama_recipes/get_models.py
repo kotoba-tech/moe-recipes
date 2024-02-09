@@ -97,11 +97,13 @@ def get_model(
                     num_experts_per_tok=args.top_k,
                     num_local_experts=args.num_experts,
                     router_aux_loss_coef=args.router_aux_loss_coef,
+                    torch_dtype=torch.bfloat16 if args.bf16 else torch.float16,
+                    use_bfloat16=True if args.bf16 else False,
+                    architectures=["MixtralForCausalLM"],
                     attn_implementation="flash_attention_2",
                     output_router_logits=args.output_router_logits,
-                    torch_dtype=torch.bfloat16 if args.bf16 else torch.float16,
                     use_cache=use_cache,
-                )
+                ),
             )
             return model
 

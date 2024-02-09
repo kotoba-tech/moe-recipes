@@ -95,6 +95,7 @@ mpirun -np $NUM_GPUS \
   --adam-beta1 0.9 \
   --adam-beta2 0.95 \
   --adam-eps 1e-6 \
+  --from-scratch \
   --hidden-size 2048 \
   --intermediate-size 7168 \
   --initializer-range 0.02 \
@@ -114,7 +115,7 @@ mpirun -np $NUM_GPUS \
   --load ${CHECKPOINT_SAVE_DIR} \
   --use-zero \
   --zero-config "scripts/mdx/mixtral-config.json" \
-  --zero-stage 2 \
+  --zero-stage 3 \
   --no-meta-device \
   --output-router-logits \
   --use-mpi \

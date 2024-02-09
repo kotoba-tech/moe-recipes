@@ -136,6 +136,11 @@ def main() -> None:
     model = get_model(
         model_name=args.base_model, use_cache=use_cache
     )
+    if args.bf16:
+        model.to(torch.bfloat16)  # type: ignore
+    elif args.fp16:
+        model.to(torch.float16)  # type: ignore
+
     model.gradient_checkpointing_enable(  # type: ignore
         gradient_checkpointing_kwargs={"use_reentrant": False}
     )
@@ -143,12 +148,6 @@ def main() -> None:
     print_rank_0("Gradient checkpointing enable")
 
     print_model_size(model, args.base_model, rank)  # type: ignore
-
-    # Convert the model to bfloat16 if fsdp and pure_bf16 is enabled
-    if args.bf16:
-        model.to(torch.bfloat16)  # type: ignore
-    elif args.fp16:
-        model.to(torch.float16)  # type: ignore
 
     set_z3_leaf_modules(  # z3_leaf
         model=model, leaf_module_classes=[MixtralSparseMoeBlock]  # type: ignore
