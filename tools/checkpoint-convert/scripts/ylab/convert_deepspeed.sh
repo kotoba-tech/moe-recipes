@@ -1,5 +1,5 @@
 #!/bin/bash
-#YBATCH -r dgx-a100_8
+#YBATCH -r epyc-7543_8
 #SBATCH --job-name=convert
 #SBATCH --time=24:00:00
 #SBATCH --output outputs/checkpoint-convert/%j.out
@@ -15,7 +15,7 @@ set -e
 # swich virtual env
 source .env/bin/activate
 
-ITERATION=2000
+ITERATION=25000
 FORMATTED_ITERATION=$(printf "iter_%07d" $ITERATION)
 
 CHECK_POINT_DIR=/home/kazuki/checkpoints/Mixtral-8x7b/${FORMATTED_ITERATION}

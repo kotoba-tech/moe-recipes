@@ -15,7 +15,7 @@ set -e
 # swich virtual env
 source .env/bin/activate
 
-ITERATION=2000
+ITERATION=5000
 FORMATTED_ITERATION=$(printf "iter_%07d" $ITERATION)
 
 python tools/inference/inference-mixtral.py \

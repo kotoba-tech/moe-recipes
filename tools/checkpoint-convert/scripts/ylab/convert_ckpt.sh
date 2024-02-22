@@ -1,5 +1,5 @@
 #!/bin/bash
-#YBATCH -r dgx-a100_8
+#YBATCH -r epyc-7543_8
 #SBATCH --job-name=convert
 #SBATCH --time=24:00:00
 #SBATCH --output outputs/checkpoint-convert/%j.out
@@ -15,10 +15,9 @@ set -e
 # swich virtual env
 source .env/bin/activate
 
-
-start=1000
-end=2000
-increment=1000
+start=25000
+end=25000
+increment=5000
 
 for ((i = start; i <= end; i += increment)); do
   ITERATION=$i
