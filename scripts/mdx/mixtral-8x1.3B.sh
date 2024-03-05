@@ -180,7 +180,7 @@ mpirun -np $NUM_GPUS \
   --eval-iters 10 \
   --bf16 \
   --mixed-precision \
-  --base-model ${CHECKPOINT_DIR} \
+  --base-model "Mixtral" \
   --save ${CHECKPOINT_SAVE_DIR} \
   --load ${CHECKPOINT_SAVE_DIR} \
   --use-zero \

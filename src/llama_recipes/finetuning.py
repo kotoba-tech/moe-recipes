@@ -149,9 +149,10 @@ def main() -> None:
 
     print_model_size(model, args.base_model, rank)  # type: ignore
 
-    set_z3_leaf_modules(  # z3_leaf
-        model=model, leaf_module_classes=[MixtralSparseMoeBlock]  # type: ignore
-    )
+    if args.zero_stage == 3:
+        set_z3_leaf_modules(  # z3_leaf
+            model=model, leaf_module_classes=[MixtralSparseMoeBlock]  # type: ignore
+        )
     model.train()  # type: ignore
 
     optimizer = optim.AdamW(
